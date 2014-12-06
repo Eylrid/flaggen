@@ -17,6 +17,42 @@ class FlagFrame(Tkinter.Frame):
         self._draw()
 
     def _draw(self):
-        self.canvas.create_rectangle(0, 0, self.canvas_width,
-                                     self.canvas_height, fill=self.flag.bg)
+        self.draw_flag(self.flag, (0, 0, self.canvas_width, self.canvas_height))
+
+    def draw_flag(self, flag, coords):
+        x0, y0, x1, y1 = coords
+        xmid = (x0+x1)/2
+        ymid = (y0+y1)/2
+
+        if x0 >= x1 or y0 >= y1:
+            #flag either too small or inverted, don't draw
+            return
+
+        #draw background
+        self.canvas.create_rectangle(x0, y0, x1, y1, fill=flag.bg)        
+
+        #draw cross
+        if flag.cross:
+            ##vertical
+            vx0 = xmid - (x1-x0)/16
+            vy0 = y0
+            vx1 = xmid + (x1-x0)/16
+            vy1 = y1
+            self.canvas.create_rectangle(vx0, vy0, vx1, vy1, fill=flag.cross,
+                                         outline=flag.cross)
+
+            ##horizontal
+            hx0 = x0
+            hy0 = ymid - (y1-y0)/8
+            hx1 = x1
+            hy1 = ymid + (y1-y0)/8
+            self.canvas.create_rectangle(hx0, hy0, hx1, hy1, fill=flag.cross,
+                                         outline=flag.cross)
+
+        #draw quaterpanels
+        panel_coords = [(x0, y0, xmid, ymid), (xmid, ymid, x1, y1),
+                        (x0, ymid, xmid, y1), (xmid, y0, x1, ymid)]
+
+        for panel, pcoords in zip(flag.quaterpanels, panel_coords):
+            self.draw_flag(panel, pcoords)
 
