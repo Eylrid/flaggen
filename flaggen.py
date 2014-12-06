@@ -9,7 +9,10 @@ class Flag:
 
         self.quaterpanels = kwargs.get('quaterpanels', None)
         if self.quaterpanels == None:
-            self.quaterpanels = [Flag() for i in range(random.randint(0,4))]
+            if random.randint(0,4) == 0:
+                self.quaterpanels = [Flag() for i in range(random.randint(1,4))]
+            else:
+                self.quaterpanels = []
 
         if 'cross' in kwargs:
             self.cross = kwargs['cross']
