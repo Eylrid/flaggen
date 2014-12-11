@@ -1,18 +1,9 @@
 import random
 
-def random_color():
-    colors = ['white', 'black',
-              '#cc0033', #red
-              '#ffcc00', #yellow
-              '#009933', #green
-              '#003399', #blue
-              ]
-    return random.choice(colors)
-
 class Flag:
     def __init__(self, **kwargs):
         self.mode = kwargs.get('mode', self.random_mode())
-        self.bg = kwargs.get('bg', random_color())
+        self.bg = kwargs.get('bg', self.random_color())
 
         if self.mode == 'plain':
             pass
@@ -25,9 +16,18 @@ class Flag:
             if not self.canton:
                 self.canton = Flag()
         elif self.mode == 'cross':
-            self.cross = kwargs.get('cross', random_color())
+            self.cross = kwargs.get('cross', self.random_color())
         else:
             raise ValueError('invalid mode')
+
+    def random_color(self):
+        colors = ['white', 'black',
+                  '#cc0033', #red
+                  '#ffcc00', #yellow
+                  '#009933', #green
+                  '#003399', #blue
+                  ]
+        return random.choice(colors)
 
     def random_mode(self):
         modes = [(5, 'plain'),
