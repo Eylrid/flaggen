@@ -58,3 +58,12 @@ class FlagFrame(Tkinter.Frame):
         elif flag.mode == 'canton':
             self.draw_flag(flag.canton, (x0, y0, xmid, ymid))
 
+def demo():
+    rt = Tkinter.Tk()
+    flag = flaggen.Flag()
+    flagframe = FlagFrame(rt, flag)
+    flagframe.pack()
+    rt.mainloop()
+
+if __name__ == '__main__':
+    demo()
