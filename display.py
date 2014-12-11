@@ -66,7 +66,34 @@ class FlagFrame(Tkinter.Frame):
                 dy0 = ymid - radius
                 dx1 = xmid + radius
                 dy1 = ymid + radius
-                self.canvas.create_oval(dx0, dy0, dx1, dy1, fill=flag.symbol_color)
+                self.canvas.create_oval(dx0, dy0, dx1, dy1,
+                                        fill=flag.symbol_color)
+            elif flag.symbol == 'crescent':
+                radius = width/6
+                dx0 = xmid - radius
+                dy0 = ymid - radius
+                dx1 = xmid + radius
+                dy1 = ymid + radius
+                if flag.symbol_color == flag.bg:
+                    if flag.bg == 'black' or flag.bg == '#000000':
+                        outline = 'white'
+                    else:
+                        outline = 'black'
+                else:
+                    outline = flag.bg
+
+                self.canvas.create_oval(dx0, dy0, dx1, dy1,
+                                        fill=flag.symbol_color,
+                                        outline=outline)
+
+                #hole
+                hx0 = dx0 + radius/2
+                hy0 = dy0 + radius/4
+                hx1 = dx1
+                hy1 = dy1 - radius/4
+                self.canvas.create_oval(hx0, hy0, hx1, hy1,
+                                        fill=flag.bg,
+                                        outline=outline)
 
 
 class Demo(Tkinter.Frame):
