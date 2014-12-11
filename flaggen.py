@@ -33,7 +33,7 @@ class Flag:
         return random.choice(colors)
 
     def random_symbol(self):
-        symbols = ['disc', 'crescent']
+        symbols = ['disc', 'crescent', 'ring']
         return random.choice(symbols)
 
     def random_mode(self):
