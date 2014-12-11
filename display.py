@@ -58,11 +58,26 @@ class FlagFrame(Tkinter.Frame):
         elif flag.mode == 'canton':
             self.draw_flag(flag.canton, (x0, y0, xmid, ymid))
 
+
+class Demo(Tkinter.Frame):
+    def __init__(self, *args, **kwargs):
+        Tkinter.Frame.__init__(self, *args, **kwargs)
+        self.newbutton = Tkinter.Button(self, text='New', command=self.new)
+        self.newbutton.grid(row=1, column=0)
+
+        self.flagframe = None
+
+    def new(self):
+        if self.flagframe: self.flagframe.destroy()
+        self.flag = flaggen.Flag()
+        self.flagframe = FlagFrame(self, self.flag)
+        self.flagframe.grid(row=0, column=0)
+
+
 def demo():
     rt = Tkinter.Tk()
-    flag = flaggen.Flag()
-    flagframe = FlagFrame(rt, flag)
-    flagframe.pack()
+    demo = Demo(rt)
+    demo.pack()
     rt.mainloop()
 
 if __name__ == '__main__':
