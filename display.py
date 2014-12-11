@@ -33,6 +33,36 @@ class FlagFrame(Tkinter.Frame):
         #draw background
         self.canvas.create_rectangle(x0, y0, x1, y1, fill=flag.bg)        
 
+        def draw_disc(hole=None):
+            radius = width/6
+            dx0 = xmid - radius
+            dy0 = ymid - radius
+            dx1 = xmid + radius
+            dy1 = ymid + radius
+            if flag.symbol_color == flag.bg:
+                if flag.bg == 'black' or flag.bg == '#000000':
+                    outline = 'white'
+                else:
+                    outline = 'black'
+            else:
+                outline = flag.bg
+
+            self.canvas.create_oval(dx0, dy0, dx1, dy1,
+                                    fill=flag.symbol_color,
+                                    outline=outline)
+
+            if hole:
+                hx0 = dx0 + radius*hole[0]
+                hy0 = dy0 + radius*hole[1]
+                hx1 = dx1 - radius*hole[2]
+                hy1 = dy1 - radius*hole[3]
+                self.canvas.create_oval(hx0, hy0, hx1, hy1,
+                                        fill=flag.bg,
+                                        outline=outline)
+
+            return (radius, dx0, dy0, dx1, dy1, outline)
+
+
         if flag.mode == 'cross':
             #draw cross
             ##vertical
@@ -61,65 +91,11 @@ class FlagFrame(Tkinter.Frame):
             self.draw_flag(flag.canton, (x0, y0, xmid, ymid))
         elif flag.mode == 'symbol':
             if flag.symbol == 'disc':
-                radius = width/6
-                dx0 = xmid - radius
-                dy0 = ymid - radius
-                dx1 = xmid + radius
-                dy1 = ymid + radius
-                self.canvas.create_oval(dx0, dy0, dx1, dy1,
-                                        fill=flag.symbol_color)
+                draw_disc()
             elif flag.symbol == 'crescent':
-                radius = width/6
-                dx0 = xmid - radius
-                dy0 = ymid - radius
-                dx1 = xmid + radius
-                dy1 = ymid + radius
-                if flag.symbol_color == flag.bg:
-                    if flag.bg == 'black' or flag.bg == '#000000':
-                        outline = 'white'
-                    else:
-                        outline = 'black'
-                else:
-                    outline = flag.bg
-
-                self.canvas.create_oval(dx0, dy0, dx1, dy1,
-                                        fill=flag.symbol_color,
-                                        outline=outline)
-
-                #hole
-                hx0 = dx0 + radius/2
-                hy0 = dy0 + radius/4
-                hx1 = dx1
-                hy1 = dy1 - radius/4
-                self.canvas.create_oval(hx0, hy0, hx1, hy1,
-                                        fill=flag.bg,
-                                        outline=outline)
+                draw_disc(hole=(0.5,0.25,0,0.25))
             elif flag.symbol == 'ring':
-                radius = width/6
-                dx0 = xmid - radius
-                dy0 = ymid - radius
-                dx1 = xmid + radius
-                dy1 = ymid + radius
-                if flag.symbol_color == flag.bg:
-                    if flag.bg == 'black' or flag.bg == '#000000':
-                        outline = 'white'
-                    else:
-                        outline = 'black'
-                else:
-                    outline = flag.bg
-
-                self.canvas.create_oval(dx0, dy0, dx1, dy1,
-                                        fill=flag.symbol_color,
-                                        outline=outline)
-
-                #hole
-                hx0 = dx0 + radius/4
-                hy0 = dy0 + radius/4
-                hx1 = dx1 - radius/4
-                hy1 = dy1 - radius/4
-                self.canvas.create_oval(hx0, hy0, hx1, hy1,
-                                        fill=flag.bg,
-                                        outline=outline)
+                draw_disc(hole=(0.25,0.25,0.25,0.25))
 
 
 class Demo(Tkinter.Frame):
