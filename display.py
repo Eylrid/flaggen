@@ -21,24 +21,35 @@ class FlagFrame(Tkinter.Frame):
 
     def draw_flag(self, flag, coords):
         x0, y0, x1, y1 = coords
-        xmid = (x0+x1)/2
-        ymid = (y0+y1)/2
-        width = x1-x0
-        height = y1-y0
-
         if x0 >= x1 or y0 >= y1:
             #flag either too small or inverted, don't draw
             return
+
+        def translate_point(x, y):
+            # Translate a point from 0 to 1 coords on the flag to canvas coords
+            width = x1-x0
+            height = y1-y0
+
+            xout = x*width + x0
+            yout = y*height + y0
+            return xout, yout
+
+        def translate_coords(x0, y0, x1, y1):
+            # Translate coords from 0 to 1 coords on the flag to canvas coords
+            x0out, y0out = translate_point(x0, y0)
+            x1out, y1out = translate_point(x1, y1)
+            return x0out, y0out, x1out, y1out
 
         #draw background
         self.canvas.create_rectangle(x0, y0, x1, y1, fill=flag.bg)        
 
         def draw_disc(hole=None):
-            radius = width/6
-            dx0 = xmid - radius
-            dy0 = ymid - radius
-            dx1 = xmid + radius
-            dy1 = ymid + radius
+            xradius = 1./6.
+            yradius = 1./3.
+            rawdx0, rawdy0 = 0.5-xradius, 0.5-yradius
+            rawdx1, rawdy1 = 0.5+xradius, 0.5+yradius
+            dx0, dy0 = translate_point(rawdx0, rawdy0)
+            dx1, dy1 = translate_point(rawdx1, rawdy1)
             if flag.symbol_color == flag.bg:
                 if flag.bg == 'black' or flag.bg == '#000000':
                     outline = 'white'
@@ -52,43 +63,38 @@ class FlagFrame(Tkinter.Frame):
                                     outline=outline)
 
             if hole:
-                hx0 = dx0 + radius*hole[0]
-                hy0 = dy0 + radius*hole[1]
-                hx1 = dx1 - radius*hole[2]
-                hy1 = dy1 - radius*hole[3]
+                hx0, hy0 = translate_point(rawdx0 + xradius*hole[0],
+                                           rawdy0 + yradius*hole[1])
+                hx1, hy1 = translate_point(rawdx1 - xradius*hole[2],
+                                           rawdy1 - yradius*hole[3])
                 self.canvas.create_oval(hx0, hy0, hx1, hy1,
                                         fill=flag.bg,
                                         outline=outline)
 
-            return (radius, dx0, dy0, dx1, dy1, outline)
-
-
         if flag.mode == 'cross':
             #draw cross
             ##vertical
-            vx0 = xmid - width/16
-            vy0 = y0
-            vx1 = xmid + width/16
-            vy1 = y1
+            vx0, vy0 = translate_point(7./16., 0)
+            vx1, vy1 = translate_point(9./16., 1)
             self.canvas.create_rectangle(vx0, vy0, vx1, vy1, fill=flag.cross,
                                          outline=flag.cross)
 
             ##horizontal
-            hx0 = x0
-            hy0 = ymid - height/8
-            hx1 = x1
-            hy1 = ymid + height/8
+            hx0, hy0 = translate_point(0, 3./8.)
+            hx1, hy1 = translate_point(1, 5./8.)
             self.canvas.create_rectangle(hx0, hy0, hx1, hy1, fill=flag.cross,
                                          outline=flag.cross)
         elif flag.mode == 'quarters':
             #draw quarterpanels
-            panel_coords = [(x0, y0, xmid, ymid), (xmid, ymid, x1, y1),
-                            (x0, ymid, xmid, y1), (xmid, y0, x1, ymid)]
+            panel_coords = [translate_coords(0, 0, 0.5, 0.5),
+                            translate_coords(0.5, 0.5, 1, 1),
+                            translate_coords(0, 0.5, 0.5, 1),
+                            translate_coords(0.5, 0, 1, 0.5)]
 
             for panel, pcoords in zip(flag.quarterpanels, panel_coords):
                 self.draw_flag(panel, pcoords)
         elif flag.mode == 'canton':
-            self.draw_flag(flag.canton, (x0, y0, xmid, ymid))
+            self.draw_flag(flag.canton, translate_coords(0, 0, 0.5, 0.5))
         elif flag.mode == 'symbol':
             if flag.symbol == 'disc':
                 draw_disc()
