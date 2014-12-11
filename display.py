@@ -23,6 +23,8 @@ class FlagFrame(Tkinter.Frame):
         x0, y0, x1, y1 = coords
         xmid = (x0+x1)/2
         ymid = (y0+y1)/2
+        width = x1-x0
+        height = y1-y0
 
         if x0 >= x1 or y0 >= y1:
             #flag either too small or inverted, don't draw
@@ -34,18 +36,18 @@ class FlagFrame(Tkinter.Frame):
         if flag.mode == 'cross':
             #draw cross
             ##vertical
-            vx0 = xmid - (x1-x0)/16
+            vx0 = xmid - width/16
             vy0 = y0
-            vx1 = xmid + (x1-x0)/16
+            vx1 = xmid + width/16
             vy1 = y1
             self.canvas.create_rectangle(vx0, vy0, vx1, vy1, fill=flag.cross,
                                          outline=flag.cross)
 
             ##horizontal
             hx0 = x0
-            hy0 = ymid - (y1-y0)/8
+            hy0 = ymid - height/8
             hx1 = x1
-            hy1 = ymid + (y1-y0)/8
+            hy1 = ymid + height/8
             self.canvas.create_rectangle(hx0, hy0, hx1, hy1, fill=flag.cross,
                                          outline=flag.cross)
         elif flag.mode == 'quarters':
@@ -57,6 +59,14 @@ class FlagFrame(Tkinter.Frame):
                 self.draw_flag(panel, pcoords)
         elif flag.mode == 'canton':
             self.draw_flag(flag.canton, (x0, y0, xmid, ymid))
+        elif flag.mode == 'symbol':
+            if flag.symbol == 'disc':
+                radius = width/6
+                dx0 = xmid - radius
+                dy0 = ymid - radius
+                dx1 = xmid + radius
+                dy1 = ymid + radius
+                self.canvas.create_oval(dx0, dy0, dx1, dy1, fill=flag.symbol_color)
 
 
 class Demo(Tkinter.Frame):
