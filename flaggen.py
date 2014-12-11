@@ -10,10 +10,10 @@ class Flag:
 
         if self.mode == 'plain':
             pass
-        elif self.mode == 'quaters':
-            self.quaterpanels = kwargs.get('quaterpanels', None)
-            if self.quaterpanels == None:
-                self.quaterpanels = [Flag() for i in range(4)]
+        elif self.mode == 'quarters':
+            self.quarterpanels = kwargs.get('quarterpanels', None)
+            if self.quarterpanels == None:
+                self.quarterpanels = [Flag() for i in range(4)]
         elif self.mode == 'canton':
             self.canton = kwargs.get('canton', None)
             if not self.canton:
@@ -25,7 +25,7 @@ class Flag:
 
     def random_mode(self):
         modes = [(5, 'plain'),
-                 (1, 'quaters'),
+                 (1, 'quarters'),
                  (1, 'canton'),
                  (5, 'cross')]
         total = sum([i[0] for i in modes])
