@@ -31,8 +31,8 @@ class FlagFrame(Tkinter.Frame):
         #draw background
         self.canvas.create_rectangle(x0, y0, x1, y1, fill=flag.bg)        
 
-        #draw cross
-        if flag.cross:
+        if flag.mode == 'cross':
+            #draw cross
             ##vertical
             vx0 = xmid - (x1-x0)/16
             vy0 = y0
@@ -48,11 +48,13 @@ class FlagFrame(Tkinter.Frame):
             hy1 = ymid + (y1-y0)/8
             self.canvas.create_rectangle(hx0, hy0, hx1, hy1, fill=flag.cross,
                                          outline=flag.cross)
+        elif flag.mode == 'quaters':
+            #draw quaterpanels
+            panel_coords = [(x0, y0, xmid, ymid), (xmid, ymid, x1, y1),
+                            (x0, ymid, xmid, y1), (xmid, y0, x1, ymid)]
 
-        #draw quaterpanels
-        panel_coords = [(x0, y0, xmid, ymid), (xmid, ymid, x1, y1),
-                        (x0, ymid, xmid, y1), (xmid, y0, x1, ymid)]
-
-        for panel, pcoords in zip(flag.quaterpanels, panel_coords):
-            self.draw_flag(panel, pcoords)
+            for panel, pcoords in zip(flag.quaterpanels, panel_coords):
+                self.draw_flag(panel, pcoords)
+        elif flag.mode == 'canton':
+            self.draw_flag(flag.canton, (x0, y0, xmid, ymid))
 
