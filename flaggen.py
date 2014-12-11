@@ -1,7 +1,13 @@
 import random
 
 def random_color():
-    return '#'+''.join([random.choice('0123456789abcdef') for i in range(6)])
+    colors = ['white', 'black',
+              '#cc0033', #red
+              '#ffcc00', #yellow
+              '#009933', #green
+              '#003399', #blue
+              ]
+    return random.choice(colors)
 
 class Flag:
     def __init__(self, **kwargs):
